@@ -1,0 +1,51 @@
+{
+  "name": "@world-engine/core",
+  "version": "0.1.0",
+  "description": "WorldEngine SDK — Motor 3D compartido para mundos inmersivos con hotspots interactivos",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": ["dist"],
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "lint": "tsc --noEmit",
+    "clean": "rm -rf dist .turbo"
+  },
+  "dependencies": {
+    "three": "^0.170.0"
+  },
+  "devDependencies": {
+    "@types/three": "^0.170.0",
+    "tsup": "^8.3.0",
+    "typescript": "^5.7.0",
+    "vitest": "^2.1.0",
+    "jsdom": "^25.0.0"
+  },
+  "peerDependencies": {
+    "@sparkjsdev/spark": ">=0.1.10"
+  },
+  "peerDependenciesMeta": {
+    "@sparkjsdev/spark": {
+      "optional": true
+    }
+  },
+  "license": "UNLICENSED",
+  "repository": {
+    "type": "git",
+    "directory": "packages/core"
+  }
+}
