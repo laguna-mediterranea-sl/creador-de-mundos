@@ -62,6 +62,8 @@ export function createMockEngine(overrides: Partial<MockEngine> = {}): WorldEngi
     setVolume: () => {},
     setAutoRotate: () => {},
     getHotspot: () => undefined,
+    deselectHotspot: () => {},
+    submitQuizAnswer: () => {},
     dispose: () => {},
     init: async () => {},
     ...overrides,

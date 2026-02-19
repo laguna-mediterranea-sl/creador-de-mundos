@@ -36,6 +36,7 @@ export type {
   World,
   ThemeColors,
   ThemeFonts,
+  ThemeLabels,
   PanelPosition,
   SidebarPosition,
   ControlsStyle,

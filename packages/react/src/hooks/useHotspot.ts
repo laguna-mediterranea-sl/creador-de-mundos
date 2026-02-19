@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import type { Hotspot } from '@world-engine/core';
 import { useWorldEngineContext } from '../context.js';
 
@@ -9,6 +9,8 @@ export interface HotspotState {
   visitedCount: number;
   /** Número total de hotspots en el mundo actual */
   totalCount: number;
+  /** Deselecciona el hotspot activo (cierra el panel) */
+  dismiss: () => void;
 }
 
 /**
@@ -17,6 +19,7 @@ export interface HotspotState {
  * Escucha los eventos del engine para actualizar:
  * - El hotspot seleccionado (al hacer clic)
  * - El progreso de visitados
+ * - La deselección del hotspot (dismiss)
  */
 export function useHotspot(): HotspotState {
   const { engine } = useWorldEngineContext();
@@ -30,6 +33,10 @@ export function useHotspot(): HotspotState {
 
     const unsubClick = engine.on('hotspot:clicked', (hotspot: Hotspot) => {
       setActiveHotspot(hotspot);
+    });
+
+    const unsubDismiss = engine.on('hotspot:dismissed', () => {
+      setActiveHotspot(null);
     });
 
     const unsubProgress = engine.on('progress:updated', (visited: number, total: number) => {
@@ -49,10 +56,15 @@ export function useHotspot(): HotspotState {
 
     return () => {
       unsubClick();
+      unsubDismiss();
       unsubProgress();
       unsubWorldLoaded();
     };
   }, [engine]);
 
-  return { activeHotspot, visitedCount, totalCount };
+  const dismiss = useCallback(() => {
+    engine?.deselectHotspot();
+  }, [engine]);
+
+  return { activeHotspot, visitedCount, totalCount, dismiss };
 }

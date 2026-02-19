@@ -71,7 +71,7 @@ export function WorldSidebar({
         fontSize: '1rem',
         color: 'var(--we-color-text)',
       }}>
-        Mundos
+        {theme.labels?.worldsHeader ?? 'Mundos'}
       </h4>
 
       {/* Progress indicator */}

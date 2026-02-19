@@ -23,6 +23,7 @@ export type {
 export type {
   ThemeColors,
   ThemeFonts,
+  ThemeLabels,
   PanelPosition,
   SidebarPosition,
   ControlsStyle,

@@ -8,6 +8,7 @@ export interface EngineEventMap {
   'world:loaded': (worldId: string) => void;
   'world:changed': (fromId: string, toId: string) => void;
   'hotspot:clicked': (hotspot: Hotspot) => void;
+  'hotspot:dismissed': () => void;
   'hotspot:visited': (hotspotId: string, worldId: string) => void;
   'portal:entered': (targetWorldId: string) => void;
   'quiz:answered': (hotspotId: string, answer: number, correct: boolean) => void;

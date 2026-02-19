@@ -236,6 +236,13 @@ export class WorldEngine {
     this.audioManager.setVolume(volume);
   }
 
+  // --- Public API: Quiz ---
+
+  /** Emite el evento quiz:answered para que el Shell procese la respuesta */
+  submitQuizAnswer(hotspotId: string, answerIndex: number, correct: boolean): void {
+    this.eventBus.emit('quiz:answered', hotspotId, answerIndex, correct);
+  }
+
   // --- Public API: State ---
 
   /** Mundo activo actual */
@@ -251,6 +258,14 @@ export class WorldEngine {
   /** Hotspot activo (seleccionado) */
   get activeHotspotId(): string | null {
     return this.hotspotManager.activeId;
+  }
+
+  /** Deselecciona el hotspot activo y emite hotspot:dismissed */
+  deselectHotspot(): void {
+    if (this.hotspotManager.activeId) {
+      this.hotspotManager.setActive(null);
+      this.eventBus.emit('hotspot:dismissed');
+    }
   }
 
   /** Obtiene un hotspot por ID */

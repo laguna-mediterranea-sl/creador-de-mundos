@@ -3,6 +3,15 @@ import { useNavigation } from './hooks/useNavigation.js';
 import { useAudio } from './hooks/useAudio.js';
 import { useWorldEngineContext } from './context.js';
 
+/** Default labels (Spanish — both target products are Spanish) */
+const DEFAULT_LABELS = {
+  previousWorld: 'Mundo anterior',
+  nextWorld: 'Siguiente mundo',
+  muteAudio: 'Silenciar audio',
+  unmuteAudio: 'Activar audio',
+  enterVR: 'Modo VR',
+} as const;
+
 export interface ControlsBarProps {
   /** Show navigation buttons (prev/next) */
   showNavigation?: boolean;
@@ -10,6 +19,8 @@ export interface ControlsBarProps {
   showAudioToggle?: boolean;
   /** Show VR button */
   showVR?: boolean;
+  /** Callback when VR button is clicked (Phase 5 — placeholder) */
+  onVRClick?: () => void;
   /** Additional CSS class */
   className?: string;
 }
@@ -64,6 +75,7 @@ export function ControlsBar({
   showNavigation = true,
   showAudioToggle = true,
   showVR,
+  onVRClick,
   className,
 }: ControlsBarProps) {
   const { theme } = useWorldEngineContext();
@@ -71,6 +83,7 @@ export function ControlsBar({
   const { muted, setMuted } = useAudio();
 
   const showVRButton = showVR ?? theme.showVRButton;
+  const labels = theme.labels;
 
   if (theme.controlsStyle === 'hidden') return null;
   const minimal = theme.controlsStyle === 'minimal';
@@ -93,7 +106,7 @@ export function ControlsBar({
             opacity: canGoPrevious ? 1 : 0.4,
             cursor: canGoPrevious ? 'pointer' : 'default',
           }}
-          aria-label="Previous world"
+          aria-label={labels?.previousWorld ?? DEFAULT_LABELS.previousWorld}
         >
           {'\u2190'}
         </button>
@@ -104,7 +117,9 @@ export function ControlsBar({
         <button
           onClick={() => setMuted(!muted)}
           style={muted ? btnActiveStyles : btnStyles}
-          aria-label={muted ? 'Unmute audio' : 'Mute audio'}
+          aria-label={muted
+            ? (labels?.unmuteAudio ?? DEFAULT_LABELS.unmuteAudio)
+            : (labels?.muteAudio ?? DEFAULT_LABELS.muteAudio)}
         >
           {muted ? '\uD83D\uDD07' : '\uD83D\uDD0A'}
         </button>
@@ -113,8 +128,9 @@ export function ControlsBar({
       {/* VR button */}
       {showVRButton && (
         <button
+          onClick={onVRClick}
           style={btnStyles}
-          aria-label="Enter VR mode"
+          aria-label={labels?.enterVR ?? DEFAULT_LABELS.enterVR}
         >
           VR
         </button>
@@ -130,7 +146,7 @@ export function ControlsBar({
             opacity: canGoNext ? 1 : 0.4,
             cursor: canGoNext ? 'pointer' : 'default',
           }}
-          aria-label="Next world"
+          aria-label={labels?.nextWorld ?? DEFAULT_LABELS.nextWorld}
         >
           {'\u2192'}
         </button>

@@ -5,6 +5,13 @@ import { useHotspot } from './hooks/useHotspot.js';
 import { useAudio } from './hooks/useAudio.js';
 import { useWorldEngineContext } from './context.js';
 
+/** Default labels (Spanish — both target products are Spanish) */
+const DEFAULT_LABELS = {
+  playAudio: 'Escuchar',
+  stopAudio: 'Detener',
+  closePanel: 'Cerrar panel',
+} as const;
+
 export interface HotspotPanelProps {
   /** Render prop for fully custom panel content */
   children?: (hotspot: Hotspot, actions: HotspotPanelActions) => ReactNode;
@@ -67,19 +74,17 @@ export function HotspotPanel({
   showAudio = true,
   className,
 }: HotspotPanelProps) {
-  const { theme } = useWorldEngineContext();
-  const { activeHotspot } = useHotspot();
+  const { theme, engine } = useWorldEngineContext();
+  const { activeHotspot, dismiss } = useHotspot();
   const { playHotspotAudio, stopAudio, isPlaying } = useAudio();
 
   const panelPos = position ?? theme.panelPosition;
+  const labels = theme.labels;
 
   if (!activeHotspot) return null;
 
   const actions: HotspotPanelActions = {
-    close: () => {
-      // Deselect hotspot — this is handled via engine events
-      // The parent can implement close logic
-    },
+    close: dismiss,
     playAudio: () => playHotspotAudio(activeHotspot.id),
     stopAudio,
     isPlaying,
@@ -139,8 +144,8 @@ export function HotspotPanel({
         </h3>
         {showClose && (
           <button
-            onClick={actions.close}
-            aria-label="Close panel"
+            onClick={dismiss}
+            aria-label={labels?.closePanel ?? DEFAULT_LABELS.closePanel}
             style={{
               background: 'none',
               border: 'none',
@@ -191,6 +196,7 @@ export function HotspotPanel({
           <iframe
             src={sanitizeAssetUrl(activeHotspot.content.video)}
             title={activeHotspot.content.title}
+            sandbox="allow-scripts allow-same-origin allow-presentation"
             style={{
               position: 'absolute',
               top: 0,
@@ -225,13 +231,18 @@ export function HotspotPanel({
           aria-label={isPlaying ? 'Stop audio' : 'Play audio'}
         >
           <span>{isPlaying ? '\u23F9' : '\u25B6'}</span>
-          <span>{isPlaying ? 'Detener' : 'Escuchar'}</span>
+          <span>{isPlaying ? (labels?.stopAudio ?? DEFAULT_LABELS.stopAudio) : (labels?.playAudio ?? DEFAULT_LABELS.playAudio)}</span>
         </button>
       )}
 
       {/* Quiz */}
       {activeHotspot.type === 'quiz' && activeHotspot.quiz && (
-        <QuizSection hotspot={activeHotspot} />
+        <QuizSection hotspot={activeHotspot} onAnswer={(index) => {
+          if (engine && activeHotspot.quiz) {
+            const correct = index === activeHotspot.quiz.correctIndex;
+            engine.submitQuizAnswer(activeHotspot.id, index, correct);
+          }
+        }} />
       )}
     </div>
   );
@@ -239,14 +250,7 @@ export function HotspotPanel({
 
 // --- Internal quiz component ---
 
-function QuizSection({ hotspot }: { hotspot: Hotspot }) {
-  const handleAnswer = (_index: number) => {
-    // Quiz evaluation is handled by the Shell via EngineCallbacks.onQuizAnswer.
-    // The HotspotPanel only renders the UI — the Shell wires the logic.
-    // In a future iteration, this component can manage answer state
-    // and display correct/incorrect feedback.
-  };
-
+function QuizSection({ hotspot, onAnswer }: { hotspot: Hotspot; onAnswer: (index: number) => void }) {
   if (!hotspot.quiz) return null;
 
   return (
@@ -262,7 +266,7 @@ function QuizSection({ hotspot }: { hotspot: Hotspot }) {
       {hotspot.quiz.options.map((option, i) => (
         <button
           key={i}
-          onClick={() => handleAnswer(i)}
+          onClick={() => onAnswer(i)}
           style={{
             padding: '10px 16px',
             background: 'var(--we-color-background)',

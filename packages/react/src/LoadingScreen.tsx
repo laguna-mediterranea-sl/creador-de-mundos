@@ -48,7 +48,7 @@ export function LoadingScreen({ children, className }: LoadingScreenProps) {
       style={overlayStyles}
       data-testid="loading-screen"
       role="status"
-      aria-label="Loading world"
+      aria-label={theme.labels?.loadingWorld ?? 'Cargando mundo'}
     >
       {children ?? (
         <>
@@ -59,7 +59,9 @@ export function LoadingScreen({ children, className }: LoadingScreenProps) {
             fontSize: '1rem',
             color: 'var(--we-color-text-dim)',
           }}>
-            {theme.productName ? `Cargando ${theme.productName}...` : 'Cargando...'}
+            {theme.productName
+              ? `${theme.labels?.loading ?? 'Cargando'} ${theme.productName}...`
+              : `${theme.labels?.loading ?? 'Cargando'}...`}
           </p>
           {theme.logo && (
             <img

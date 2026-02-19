@@ -59,7 +59,7 @@ describe('LoadingScreen', () => {
 
     const el = screen.getByTestId('loading-screen');
     expect(el).toHaveAttribute('role', 'status');
-    expect(el).toHaveAttribute('aria-label', 'Loading world');
+    expect(el).toHaveAttribute('aria-label', 'Cargando mundo');
   });
 });
 
@@ -123,14 +123,14 @@ describe('ControlsBar', () => {
     const Wrapper = createTestWrapper();
     render(<ControlsBar showAudioToggle />, { wrapper: Wrapper });
 
-    expect(screen.getByLabelText('Mute audio')).toBeInTheDocument();
+    expect(screen.getByLabelText('Silenciar audio')).toBeInTheDocument();
   });
 
   it('should show VR button when theme enables it', () => {
     const Wrapper = createTestWrapper();
     render(<ControlsBar />, { wrapper: Wrapper });
 
-    expect(screen.getByLabelText('Enter VR mode')).toBeInTheDocument();
+    expect(screen.getByLabelText('Modo VR')).toBeInTheDocument();
   });
 
   it('should not render when controlsStyle is hidden', () => {
@@ -145,8 +145,8 @@ describe('ControlsBar', () => {
     const Wrapper = createTestWrapper();
     render(<ControlsBar showNavigation />, { wrapper: Wrapper });
 
-    expect(screen.getByLabelText('Previous world')).toBeInTheDocument();
-    expect(screen.getByLabelText('Next world')).toBeInTheDocument();
+    expect(screen.getByLabelText('Mundo anterior')).toBeInTheDocument();
+    expect(screen.getByLabelText('Siguiente mundo')).toBeInTheDocument();
   });
 });
 

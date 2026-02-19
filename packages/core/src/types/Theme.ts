@@ -28,6 +28,25 @@ export type SidebarPosition = 'left' | 'right' | 'hidden';
 export type ControlsStyle = 'full' | 'minimal' | 'hidden';
 
 /**
+ * Etiquetas de texto configurables.
+ * Permite al producto definir el idioma de la UI sin hardcodear strings.
+ * Si no se proporcionan, se usan valores por defecto en español.
+ */
+export interface ThemeLabels {
+  loading: string;
+  playAudio: string;
+  stopAudio: string;
+  worldsHeader: string;
+  previousWorld: string;
+  nextWorld: string;
+  muteAudio: string;
+  unmuteAudio: string;
+  enterVR: string;
+  closePanel: string;
+  loadingWorld: string;
+}
+
+/**
  * Tema visual del engine.
  * Cada producto (Tu Cuento Mágico, Aulas Mágicas) define su propio tema.
  * El SDK aplica estos estilos sin saber en qué producto está.
@@ -45,4 +64,5 @@ export interface EngineTheme {
   autoRotate: boolean;
   showHelpToast: boolean;
   controlsStyle: ControlsStyle;
+  labels?: Partial<ThemeLabels>;
 }
