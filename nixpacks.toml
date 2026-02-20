@@ -1,0 +1,14 @@
+# Nixpacks config for Dokploy deployment
+# Preferred: use Dockerfile build type in Dokploy instead
+
+[phases.setup]
+nixPkgs = ["nodejs_18", "pnpm-9_x"]
+
+[phases.install]
+cmds = ["npm install -g corepack@0.24.1 && corepack enable", "pnpm install --frozen-lockfile"]
+
+[phases.build]
+cmds = ["npx turbo run build", "npm install -g serve"]
+
+[start]
+cmd = "serve apps/demo/dist -s -l 3000"
