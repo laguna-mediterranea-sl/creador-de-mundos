@@ -1,5 +1,5 @@
 import { createContext, useContext } from 'react';
-import type { WorldEngine, EngineTheme } from '@world-engine/core';
+import type { WorldEngine, EngineTheme, World } from '@world-engine/core';
 
 /** State shared via context between WorldViewer and child components */
 export interface WorldEngineContextValue {
@@ -7,6 +7,9 @@ export interface WorldEngineContextValue {
   theme: EngineTheme;
   loading: boolean;
   error: Error | null;
+  activeWorld: World | null;
+  activeWorldId: string | null;
+  worlds: World[];
 }
 
 export const WorldEngineContext = createContext<WorldEngineContextValue | null>(null);
