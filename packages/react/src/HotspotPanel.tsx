@@ -1,4 +1,4 @@
-import { type CSSProperties, type ReactNode } from 'react';
+import { type CSSProperties, type ReactNode, useState } from 'react';
 import type { Hotspot } from '@world-engine/core';
 import { sanitizeAssetUrl } from '@world-engine/core';
 import { useHotspot } from './hooks/useHotspot.js';
@@ -251,7 +251,19 @@ export function HotspotPanel({
 // --- Internal quiz component ---
 
 function QuizSection({ hotspot, onAnswer }: { hotspot: Hotspot; onAnswer: (index: number) => void }) {
+  const [answered, setAnswered] = useState(false);
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+
   if (!hotspot.quiz) return null;
+
+  const handleAnswer = (index: number) => {
+    if (answered) return;
+    setAnswered(true);
+    setSelectedIndex(index);
+    onAnswer(index);
+  };
+
+  const correctIndex = hotspot.quiz.correctIndex;
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
@@ -263,25 +275,54 @@ function QuizSection({ hotspot, onAnswer }: { hotspot: Hotspot; onAnswer: (index
       }}>
         {hotspot.quiz.question}
       </p>
-      {hotspot.quiz.options.map((option, i) => (
-        <button
-          key={i}
-          onClick={() => onAnswer(i)}
-          style={{
-            padding: '10px 16px',
-            background: 'var(--we-color-background)',
-            color: 'var(--we-color-text)',
-            border: '1px solid var(--we-color-text-dim)',
-            borderRadius: 'calc(var(--we-border-radius) / 2)',
-            cursor: 'pointer',
-            fontFamily: 'var(--we-font-body)',
-            fontSize: '0.9rem',
-            textAlign: 'left',
-          }}
-        >
-          {option}
-        </button>
-      ))}
+      {hotspot.quiz.options.map((option, i) => {
+        const isSelected = selectedIndex === i;
+        const isCorrect = i === correctIndex;
+        let borderColor = 'var(--we-color-text-dim)';
+        let bg = 'var(--we-color-background)';
+        if (answered && isSelected && isCorrect) {
+          borderColor = '#10b981';
+          bg = 'rgba(16, 185, 129, 0.15)';
+        } else if (answered && isSelected && !isCorrect) {
+          borderColor = '#ef4444';
+          bg = 'rgba(239, 68, 68, 0.15)';
+        } else if (answered && isCorrect) {
+          borderColor = '#10b981';
+        }
+        return (
+          <button
+            key={i}
+            onClick={() => handleAnswer(i)}
+            disabled={answered}
+            style={{
+              padding: '10px 16px',
+              background: bg,
+              color: 'var(--we-color-text)',
+              border: `2px solid ${borderColor}`,
+              borderRadius: 'calc(var(--we-border-radius) / 2)',
+              cursor: answered ? 'default' : 'pointer',
+              fontFamily: 'var(--we-font-body)',
+              fontSize: '0.9rem',
+              textAlign: 'left',
+              opacity: answered && !isSelected && !isCorrect ? 0.5 : 1,
+              transition: 'all 0.2s ease',
+            }}
+          >
+            {option}
+          </button>
+        );
+      })}
+      {answered && hotspot.quiz.explanation && (
+        <p style={{
+          margin: '4px 0 0',
+          fontSize: '0.85rem',
+          color: 'var(--we-color-text-dim)',
+          fontFamily: 'var(--we-font-body)',
+          fontStyle: 'italic',
+        }}>
+          {hotspot.quiz.explanation}
+        </p>
+      )}
     </div>
   );
 }

@@ -71,10 +71,11 @@ export class HotspotManager {
 
   /**
    * Establece los hotspots del mundo activo.
-   * Limpia los hotspots anteriores y crea los nuevos.
+   * Limpia los hotspots anteriores, resetea visitados, y crea los nuevos.
    */
   setHotspots(hotspots: Hotspot[]): void {
     this.clearHotspotElements();
+    this.visited.clear();
     this.hotspots = hotspots;
 
     for (const hotspot of hotspots) {
@@ -327,9 +328,14 @@ export class HotspotManager {
   }
 
   /**
-   * Gestiona el clic en un hotspot.
+   * Gestiona el clic en un hotspot con debounce de 200ms.
    */
+  private lastClickTime = 0;
   private handleHotspotClick(hotspot: Hotspot): void {
+    const now = Date.now();
+    if (now - this.lastClickTime < 200) return;
+    this.lastClickTime = now;
+
     this.setActive(hotspot.id);
     this.eventBus.emit('hotspot:clicked', hotspot);
   }

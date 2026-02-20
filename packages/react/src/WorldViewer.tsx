@@ -17,6 +17,7 @@ import { WorldEngineContext } from './context.js';
 import { useWorldEngine } from './hooks/useWorldEngine.js';
 import { useHotspot } from './hooks/useHotspot.js';
 import { themeToCSS, rootStyles } from './theme.js';
+import { ErrorBoundary } from './ErrorBoundary.js';
 
 // --- Sub-component types for slot pattern ---
 
@@ -117,19 +118,21 @@ export function WorldViewer({
 
   return (
     <WorldEngineContext.Provider value={contextValue}>
-      <div
-        ref={containerRef}
-        className={className}
-        style={{
-          ...rootStyles,
-          ...cssVars,
-          ...style,
-        }}
-        data-testid="world-viewer"
-      >
-        {/* Slot children are rendered as overlays on top of the 3D canvas */}
-        {children}
-      </div>
+      <ErrorBoundary>
+        <div
+          ref={containerRef}
+          className={className}
+          style={{
+            ...rootStyles,
+            ...cssVars,
+            ...style,
+          }}
+          data-testid="world-viewer"
+        >
+          {/* Slot children are rendered as overlays on top of the 3D canvas */}
+          {children}
+        </div>
+      </ErrorBoundary>
     </WorldEngineContext.Provider>
   );
 }

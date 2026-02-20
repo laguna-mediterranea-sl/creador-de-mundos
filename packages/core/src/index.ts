@@ -13,6 +13,39 @@ export { WorldLoader } from './loader/WorldLoader.js';
 export { AssetCache } from './loader/AssetCache.js';
 export { Navigator } from './navigation/Navigator.js';
 
+// Story personalization
+export { StoryPersonalization } from './story/StoryPersonalization.js';
+export type {
+  ChildProfile,
+  StoryTemplate,
+  StoryPage,
+  PersonalizedStory,
+} from './story/StoryPersonalization.js';
+export { StoryTemplateRegistry } from './story/StoryTemplateRegistry.js';
+
+// World building & editor tools
+export { WorldBuilder } from './editor/WorldBuilder.js';
+export { HotspotTemplateRegistry, DEFAULT_TEMPLATES } from './editor/HotspotTemplates.js';
+export type { HotspotTemplate, TemplatePosition } from './editor/HotspotTemplates.js';
+export { SceneGenerator } from './editor/SceneGenerator.js';
+export type {
+  GenerationConfig,
+  GenerateSceneRequest,
+  GenerateSceneResult,
+} from './editor/SceneGenerator.js';
+
+// API services
+export { ApiClient } from './api/ApiClient.js';
+export type { ApiClientConfig, ApiError, RequestOptions } from './api/ApiClient.js';
+export { StoryService } from './api/StoryService.js';
+export { WorldService } from './api/WorldService.js';
+export { CoReadingService } from './api/CoReadingService.js';
+export type { CoReadingInviteData, CoReadingJoinResult } from './api/CoReadingService.js';
+export { ConnectionManager } from './api/ConnectionManager.js';
+export type { ConnectionManagerConfig, ConnectionStatus } from './api/ConnectionManager.js';
+export { ConcurrencyManager, TaskPool, Semaphore, debounce, throttle } from './api/ConcurrencyManager.js';
+export type { TaskPriority } from './api/ConcurrencyManager.js';
+
 // Utilities
 export { sanitizeColor, sanitizeAssetUrl, escapeAttr } from './utils/sanitize.js';
 

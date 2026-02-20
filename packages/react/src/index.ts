@@ -38,5 +38,8 @@ export type { WorldEngineContextValue } from './context.js';
 // Theme utilities
 export { themeToCSS } from './theme.js';
 
+// Error handling
+export { ErrorBoundary } from './ErrorBoundary.js';
+
 // Styles
 export { injectReactStyles } from './styles.js';
