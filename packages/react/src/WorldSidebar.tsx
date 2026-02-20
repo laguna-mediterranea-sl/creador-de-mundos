@@ -49,7 +49,7 @@ export function WorldSidebar({
   className,
 }: WorldSidebarProps) {
   const { theme } = useWorldEngineContext();
-  const { goToWorld, itineraryIndex, itineraryTotal } = useNavigation();
+  const { goToWorld, activeWorldId, itineraryIndex, itineraryTotal } = useNavigation();
 
   const sidePos = position ?? theme.sidebarPosition;
   if (sidePos === 'hidden') return null;
@@ -87,9 +87,8 @@ export function WorldSidebar({
       )}
 
       {/* World list */}
-      {worlds.map((world, index) => {
-        const isCurrent = index === itineraryIndex ||
-          world.id === worlds[itineraryIndex]?.id;
+      {worlds.map((world) => {
+        const isCurrent = world.id === activeWorldId;
 
         if (children) {
           return (

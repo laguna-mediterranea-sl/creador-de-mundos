@@ -15,6 +15,7 @@ import type {
 } from '@world-engine/core';
 import { WorldEngineContext } from './context.js';
 import { useWorldEngine } from './hooks/useWorldEngine.js';
+import { useHotspot } from './hooks/useHotspot.js';
 import { themeToCSS, rootStyles } from './theme.js';
 
 // --- Sub-component types for slot pattern ---
@@ -109,7 +110,10 @@ export function WorldViewer({
     theme,
     loading: state.loading,
     error: state.error,
-  }), [engine, theme, state.loading, state.error]);
+    activeWorld: state.activeWorld,
+    activeWorldId: state.activeWorldId,
+    worlds: state.worlds,
+  }), [engine, theme, state.loading, state.error, state.activeWorld, state.activeWorldId, state.worlds]);
 
   return (
     <WorldEngineContext.Provider value={contextValue}>
@@ -137,9 +141,8 @@ export function WorldViewer({
  * Recibe un render prop con el hotspot actualmente seleccionado (o null).
  */
 function Panel({ children }: PanelSlotProps) {
-  // The actual rendering is handled by HotspotPanel component
-  // This is a structural slot — it receives the render prop from the product
-  return <>{children(null)}</>;
+  const { activeHotspot } = useHotspot();
+  return <>{children(activeHotspot)}</>;
 }
 
 /**

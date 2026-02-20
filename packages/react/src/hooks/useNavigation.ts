@@ -3,6 +3,8 @@ import type { TransitionEffect } from '@world-engine/core';
 import { useWorldEngineContext } from '../context.js';
 
 export interface NavigationState {
+  /** ID del mundo activo */
+  activeWorldId: string | null;
   /** Se puede ir al siguiente mundo del itinerario */
   canGoNext: boolean;
   /** Se puede ir al mundo anterior del itinerario */
@@ -27,6 +29,7 @@ export function useNavigation(): NavigationState & NavigationActions {
   const { engine } = useWorldEngineContext();
 
   const [navState, setNavState] = useState<NavigationState>({
+    activeWorldId: null,
     canGoNext: false,
     canGoPrevious: false,
     itineraryIndex: -1,
@@ -36,6 +39,7 @@ export function useNavigation(): NavigationState & NavigationActions {
   const updateNavState = useCallback(() => {
     if (!engine) return;
     setNavState({
+      activeWorldId: engine.activeWorldId,
       canGoNext: engine.canGoNext,
       canGoPrevious: engine.canGoPrevious,
       itineraryIndex: engine.itineraryIndex,
