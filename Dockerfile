@@ -32,8 +32,9 @@ RUN rm /etc/nginx/conf.d/default.conf
 # Copy custom nginx config
 COPY deploy/nginx.conf /etc/nginx/conf.d/worldengine.conf
 
-# Copy built demo app
+# Copy built demo app and fix permissions
 COPY --from=builder /app/apps/demo/dist /usr/share/nginx/html
+RUN chown -R nginx:nginx /usr/share/nginx/html && chmod -R 755 /usr/share/nginx/html
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s \
